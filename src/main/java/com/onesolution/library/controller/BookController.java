@@ -3,6 +3,7 @@ package com.onesolution.library.controller;
 import com.onesolution.library.dto.BookRequest;
 import com.onesolution.library.dto.BookResponse;
 import com.onesolution.library.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ public class BookController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBook(@RequestBody BookRequest bookRequest) {
+    public void addBook(@RequestBody @Valid BookRequest bookRequest) {
         bookService.addBook(bookRequest);
     }
     @GetMapping("")

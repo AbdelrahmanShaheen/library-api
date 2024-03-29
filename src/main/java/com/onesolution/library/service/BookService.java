@@ -28,7 +28,7 @@ public class BookService {
             throw new ConflictException("Book with title " + bookRequest.getTitle() + " already exists");
         }
         Author author = authorRepository.findById(bookRequest.getAuthorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Author with id " + bookRequest.getAuthorId() + " does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author with id [%s] not found".formatted(bookRequest.getAuthorId())));
         Book book = bookMapper.toEntity(bookRequest);
         book.setAuthor(author);
         bookRepository.save(book);
@@ -40,15 +40,15 @@ public class BookService {
 
     public BookResponse getBookById(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id [%s] does not exist".formatted(id)));
         return bookMapper.toDto(book);
     }
 
     public void updateBook(Long id, BookRequest bookRequest) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id [%s] does not exist".formatted(id)));
 
-        final boolean[] changes = {false};
+        boolean changes = false;
 
         String title = bookRequest.getTitle();
         String description = bookRequest.getDescription();
@@ -62,27 +62,30 @@ public class BookService {
             if (isBookPresent) {
                 throw new ConflictException("Book with title: " + title + ". already exists");
             }
-            changes[0] = true;
+            changes = true;
         }
         if (description != null && !description.equals(book.getDescription())) {
             book.setDescription(description);
-            changes[0] = true;
+            changes = true;
         }
         if (quantity != book.getQuantity()) {
+            if(quantity < 0) {
+                throw new RequestValidationException("Quantity cannot be negative");
+            }
             book.setQuantity(quantity);
-            changes[0] = true;
+            changes = true;
         }
         if (genre != null && !genre.equals(book.getGenre())) {
             book.setGenre(genre);
-            changes[0] = true;
+            changes = true;
         }
         if (authorId != null && !authorId.equals(book.getAuthor().getId())) {
             Author author = authorRepository.findById(authorId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Author with id " + authorId + " does not exist"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Author with id [%s] does not exist".formatted(authorId)));
             book.setAuthor(author);
-            changes[0] = true;
+            changes = true;
         }
-        if (!changes[0]) {
+        if (!changes) {
             throw new RequestValidationException("No changes detected");
         }
         bookRepository.save(book);
@@ -90,7 +93,7 @@ public class BookService {
 
     public void deleteBook(Long id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id [%s] does not exist".formatted(id)));
         bookRepository.delete(book);
     }
 }
