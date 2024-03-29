@@ -1,9 +1,12 @@
 package com.onesolution.library.service;
 
 import com.onesolution.library.dto.AuthorRequest;
+import com.onesolution.library.dto.AuthorResponse;
 import com.onesolution.library.mapper.AuthorMapper;
 import com.onesolution.library.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,5 +17,9 @@ public class AuthorService {
 
     public void createAuthor(AuthorRequest authorRequest) {
         authorRepository.save(authorMapper.toEntity(authorRequest));
+    }
+
+    public Page<AuthorResponse> getAllAuthors(Pageable page) {
+        return authorRepository.findAll(page).map(authorMapper::toResponse);
     }
 }

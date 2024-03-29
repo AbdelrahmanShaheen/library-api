@@ -1,8 +1,11 @@
 package com.onesolution.library.controller;
 
 import com.onesolution.library.dto.AuthorRequest;
+import com.onesolution.library.dto.AuthorResponse;
 import com.onesolution.library.service.AuthorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +19,10 @@ public class AuthorController {
     public void createAuthor(@RequestBody AuthorRequest authorRequest) {
         authorService.createAuthor(authorRequest);
     }
-
-    //GET /authors - Get all authors
-
+    @GetMapping("")
+    Page<AuthorResponse> getAllAuthors(Pageable page) {
+        return authorService.getAllAuthors(page);
+    }
     //GET /authors/{id} - Get author by id
 
     //PUT /authors/{id} - Update author by id
