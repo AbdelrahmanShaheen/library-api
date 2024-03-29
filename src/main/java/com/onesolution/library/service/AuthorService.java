@@ -29,4 +29,20 @@ public class AuthorService {
                 .map(authorMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
     }
+
+    public void updateAuthor(Long id, AuthorRequest authorRequest) {
+        authorRepository.findById(id)
+                .map(author -> {
+                    if (authorRequest.getName() != null)
+                    {
+                        author.setName(authorRequest.getName());
+                    }
+                    if (authorRequest.getBiography() != null)
+                    {
+                        author.setBiography(authorRequest.getBiography());
+                    }
+                    return authorRepository.save(author);
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
+    }
 }

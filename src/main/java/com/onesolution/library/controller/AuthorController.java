@@ -28,7 +28,9 @@ public class AuthorController {
         return authorService.getAuthorById(id);
     }
     //PUT /authors/{id} - Update author by id
-
+    @PutMapping("/{id}")
+    public void updateAuthor(@PathVariable Long id, @RequestBody AuthorRequest authorRequest) {
+        authorService.updateAuthor(id, authorRequest);
+    }
     //DELETE /authors/{id} - Delete author by id
-
 }
