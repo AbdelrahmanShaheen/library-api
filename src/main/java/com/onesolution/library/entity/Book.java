@@ -23,7 +23,8 @@ public class Book {
     @Column(name = "description" ,nullable = false)
     private String description;
     @ManyToOne(fetch = FetchType.EAGER,
-               cascade = CascadeType.ALL)
+               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "author_id" ,nullable = false)
     private Author author;
     @Column(name = "quantity" ,nullable = false)

@@ -5,6 +5,7 @@ import com.onesolution.library.dto.BookResponse;
 import com.onesolution.library.entity.Author;
 import com.onesolution.library.entity.Book;
 import com.onesolution.library.exception.ConflictException;
+import com.onesolution.library.exception.RequestValidationException;
 import com.onesolution.library.exception.ResourceNotFoundException;
 import com.onesolution.library.mapper.BookMapper;
 import com.onesolution.library.repository.AuthorRepository;
@@ -20,6 +21,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final BookMapper bookMapper;
+
     public void addBook(BookRequest bookRequest) {
         boolean isBookPresent = bookRepository.existsByTitle(bookRequest.getTitle());
         if (isBookPresent) {
@@ -40,5 +42,49 @@ public class BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " does not exist"));
         return bookMapper.toDto(book);
+    }
+
+    public void updateBook(Long id, BookRequest bookRequest) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " does not exist"));
+
+        final boolean[] changes = {false};
+
+        String title = bookRequest.getTitle();
+        String description = bookRequest.getDescription();
+        int quantity = bookRequest.getQuantity();
+        String genre = bookRequest.getGenre();
+        Long authorId = bookRequest.getAuthorId();
+
+        if (title != null && !title.equals(book.getTitle())) {
+            book.setTitle(title);
+            boolean isBookPresent = bookRepository.existsByTitle(title);
+            if (isBookPresent) {
+                throw new ConflictException("Book with title: " + title + ". already exists");
+            }
+            changes[0] = true;
+        }
+        if (description != null && !description.equals(book.getDescription())) {
+            book.setDescription(description);
+            changes[0] = true;
+        }
+        if (quantity != book.getQuantity()) {
+            book.setQuantity(quantity);
+            changes[0] = true;
+        }
+        if (genre != null && !genre.equals(book.getGenre())) {
+            book.setGenre(genre);
+            changes[0] = true;
+        }
+        if (authorId != null && !authorId.equals(book.getAuthor().getId())) {
+            Author author = authorRepository.findById(authorId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Author with id " + authorId + " does not exist"));
+            book.setAuthor(author);
+            changes[0] = true;
+        }
+        if (!changes[0]) {
+            throw new RequestValidationException("No changes detected");
+        }
+        bookRepository.save(book);
     }
 }
