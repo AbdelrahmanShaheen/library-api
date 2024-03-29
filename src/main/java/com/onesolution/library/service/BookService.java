@@ -1,6 +1,7 @@
 package com.onesolution.library.service;
 
 import com.onesolution.library.dto.BookRequest;
+import com.onesolution.library.dto.BookResponse;
 import com.onesolution.library.entity.Author;
 import com.onesolution.library.entity.Book;
 import com.onesolution.library.exception.ConflictException;
@@ -9,6 +10,8 @@ import com.onesolution.library.mapper.BookMapper;
 import com.onesolution.library.repository.AuthorRepository;
 import com.onesolution.library.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,5 +30,9 @@ public class BookService {
         Book book = bookMapper.toEntity(bookRequest);
         book.setAuthor(author);
         bookRepository.save(book);
+    }
+
+    public Page<BookResponse> getAllBooks(Pageable page) {
+        return bookRepository.findAll(page).map(bookMapper::toDto);
     }
 }
