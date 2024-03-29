@@ -35,4 +35,10 @@ public class BookService {
     public Page<BookResponse> getAllBooks(Pageable page) {
         return bookRepository.findAll(page).map(bookMapper::toDto);
     }
+
+    public BookResponse getBookById(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " does not exist"));
+        return bookMapper.toDto(book);
+    }
 }

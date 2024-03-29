@@ -24,4 +24,8 @@ public class BookController {
     public Page<BookResponse> getAllBooks(Pageable page) {
         return bookService.getAllBooks(page);
     }
+    @GetMapping("/{id}")
+    public BookResponse getBookById(@PathVariable Long id) {
+        return bookService.getBookById(id);
+    }
 }
