@@ -38,4 +38,11 @@ public class BookController {
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
     }
+    @GetMapping("/search")
+    public Page<BookResponse> searchBooksBy(@RequestParam(required = false) String title,
+                                            @RequestParam(required = false) String genre,
+                                            Pageable page)
+    {
+        return bookService.searchBooksBy(title,genre, page);
+    }
 }

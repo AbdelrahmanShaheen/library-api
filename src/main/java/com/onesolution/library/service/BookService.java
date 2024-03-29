@@ -96,4 +96,14 @@ public class BookService {
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id [%s] does not exist".formatted(id)));
         bookRepository.delete(book);
     }
+
+    public Page<BookResponse> searchBooksBy(String title, String genre, Pageable page) {
+        if(title != null) {
+            return bookRepository.findByTitle(title, page).map(bookMapper::toDto);
+        }
+        if(genre != null) {
+            return bookRepository.findByGenre(genre, page).map(bookMapper::toDto);
+        }
+        return getAllBooks(page);
+    }
 }
