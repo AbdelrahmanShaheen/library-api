@@ -2,6 +2,7 @@ package com.onesolution.library.service;
 
 import com.onesolution.library.dto.AuthorRequest;
 import com.onesolution.library.dto.AuthorResponse;
+import com.onesolution.library.exception.ResourceNotFoundException;
 import com.onesolution.library.mapper.AuthorMapper;
 import com.onesolution.library.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,11 @@ public class AuthorService {
 
     public Page<AuthorResponse> getAllAuthors(Pageable page) {
         return authorRepository.findAll(page).map(authorMapper::toResponse);
+    }
+
+    public AuthorResponse getAuthorById(Long id) {
+        return authorRepository.findById(id)
+                .map(authorMapper::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
     }
 }

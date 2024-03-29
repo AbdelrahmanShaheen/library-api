@@ -23,8 +23,10 @@ public class AuthorController {
     Page<AuthorResponse> getAllAuthors(Pageable page) {
         return authorService.getAllAuthors(page);
     }
-    //GET /authors/{id} - Get author by id
-
+    @GetMapping("/{id}")
+    AuthorResponse getAuthorById(@PathVariable Long id) {
+        return authorService.getAuthorById(id);
+    }
     //PUT /authors/{id} - Update author by id
 
     //DELETE /authors/{id} - Delete author by id
