@@ -2,6 +2,7 @@ package com.onesolution.library.service;
 
 import com.onesolution.library.dto.AuthorRequest;
 import com.onesolution.library.dto.AuthorResponse;
+import com.onesolution.library.exception.RequestValidationException;
 import com.onesolution.library.exception.ResourceNotFoundException;
 import com.onesolution.library.mapper.AuthorMapper;
 import com.onesolution.library.repository.AuthorRepository;
@@ -27,26 +28,39 @@ public class AuthorService {
     public AuthorResponse getAuthorById(Long id) {
         return authorRepository.findById(id)
                 .map(authorMapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author with id [%s] not found".formatted(id)));
     }
 
     public void updateAuthor(Long id, AuthorRequest authorRequest) {
+        final boolean[] changes = {false};
+        String name = authorRequest.getName();
+        String biography = authorRequest.getBiography();
         authorRepository.findById(id)
                 .map(author -> {
-                    if (authorRequest.getName() != null)
+                    if (name != null && !name.equals(author.getName()))
                     {
-                        author.setName(authorRequest.getName());
+                        author.setName(name);
+                        changes[0] = true;
                     }
-                    if (authorRequest.getBiography() != null)
+                    if (biography != null && !biography.equals(author.getBiography()))
                     {
-                        author.setBiography(authorRequest.getBiography());
+                        author.setBiography(biography);
+                        changes[0] = true;
                     }
                     return authorRepository.save(author);
                 })
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author with id [%s] not found".formatted(id)));
+        if (!changes[0])
+        {
+            throw new RequestValidationException("No changes detected");
+        }
     }
 
     public void deleteAuthor(Long id) {
+        if (!authorRepository.existsById(id))
+        {
+            throw new ResourceNotFoundException("Author with id [%s] not found".formatted(id));
+        }
         authorRepository.deleteById(id);
     }
 }
