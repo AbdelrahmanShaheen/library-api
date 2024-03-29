@@ -45,4 +45,8 @@ public class AuthorService {
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
     }
+
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteById(id);
+    }
 }

@@ -33,4 +33,9 @@ public class AuthorController {
         authorService.updateAuthor(id, authorRequest);
     }
     //DELETE /authors/{id} - Delete author by id
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAuthor(@PathVariable Long id) {
+        authorService.deleteAuthor(id);
+    }
 }
