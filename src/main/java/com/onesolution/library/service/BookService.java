@@ -87,4 +87,10 @@ public class BookService {
         }
         bookRepository.save(book);
     }
+
+    public void deleteBook(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " does not exist"));
+        bookRepository.delete(book);
+    }
 }
