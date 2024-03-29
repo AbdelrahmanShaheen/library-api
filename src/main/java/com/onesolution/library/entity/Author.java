@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -21,4 +23,8 @@ public class Author {
     private String name;
     @Column(name = "biography")
     private String biography;
+    @OneToMany(mappedBy = "author" ,
+               fetch = FetchType.LAZY ,
+               cascade = CascadeType.ALL)
+    private Set<Book> books;
 }
