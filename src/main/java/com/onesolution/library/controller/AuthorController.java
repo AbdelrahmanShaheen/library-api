@@ -2,6 +2,7 @@ package com.onesolution.library.controller;
 
 import com.onesolution.library.dto.AuthorRequest;
 import com.onesolution.library.dto.AuthorResponse;
+import com.onesolution.library.dto.BookResponse;
 import com.onesolution.library.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,10 @@ public class AuthorController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAuthor(@PathVariable Long id) {
         authorService.deleteAuthor(id);
+    }
+    //getting all books related to an author
+    @GetMapping("/{id}/books")
+    public Page<BookResponse> getBooksByAuthor(@PathVariable Long id, Pageable page) {
+        return authorService.getBooksByAuthor(id, page);
     }
 }
