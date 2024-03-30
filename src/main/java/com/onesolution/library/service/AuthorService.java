@@ -2,10 +2,13 @@ package com.onesolution.library.service;
 
 import com.onesolution.library.dto.AuthorRequest;
 import com.onesolution.library.dto.AuthorResponse;
+import com.onesolution.library.dto.BookResponse;
 import com.onesolution.library.exception.RequestValidationException;
 import com.onesolution.library.exception.ResourceNotFoundException;
 import com.onesolution.library.mapper.AuthorMapper;
+import com.onesolution.library.mapper.BookMapper;
 import com.onesolution.library.repository.AuthorRepository;
+import com.onesolution.library.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +18,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthorService {
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
     private final AuthorMapper authorMapper;
+    private final BookMapper bookMapper;
 
     public void createAuthor(AuthorRequest authorRequest) {
         authorRepository.save(authorMapper.toEntity(authorRequest));
@@ -62,5 +67,13 @@ public class AuthorService {
             throw new ResourceNotFoundException("Author with id [%s] not found".formatted(id));
         }
         authorRepository.deleteById(id);
+    }
+
+    public Page<BookResponse> getBooksByAuthor(Long id, Pageable page) {
+        if (!authorRepository.existsById(id))
+        {
+            throw new ResourceNotFoundException("Author with id [%s] not found".formatted(id));
+        }
+        return bookRepository.findByAuthorId(id, page).map(bookMapper::toDto);
     }
 }
