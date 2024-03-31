@@ -14,5 +14,6 @@ public class BookResponse {
     private String description;
     private AuthorResponse author;
     private int quantity;
+    private int availableQuantity;
     private String genre;
 }

@@ -51,4 +51,8 @@ public class BookController {
     public void borrowBook(@PathVariable Long id, @RequestBody BookTransactionRequest bookTransactionRequest) {
         bookService.borrowBook(id, bookTransactionRequest);
     }
+    @PostMapping("/{id}/return")
+    public void returnBook(@PathVariable Long id, @RequestBody BookTransactionRequest bookTransactionRequest) {
+        bookService.returnBook(id, bookTransactionRequest);
+    }
 }

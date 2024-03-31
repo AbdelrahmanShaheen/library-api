@@ -14,5 +14,6 @@ public interface BookMapper {
     @Mapping(target = "availableQuantity", source = "quantity")
     @Mapping(target = "publishedDate", expression = "java(LocalDateTime.now())")
     Book toEntity(BookRequest bookRequest);
+    @Mapping(target = "availableQuantity", source = "quantity")
     BookResponse toDto(Book book);
 }

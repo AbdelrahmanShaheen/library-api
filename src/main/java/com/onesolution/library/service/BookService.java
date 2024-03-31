@@ -141,4 +141,19 @@ public class BookService {
 
         bookRepository.save(book);
     }
+
+    public void returnBook(Long id, BookTransactionRequest bookTransactionRequest) {
+
+        BookTransaction bookTransaction = bookTransactionRepository.findByBookIdAndBorrowerEmailAndStatus(id, bookTransactionRequest.getBorrowerEmail(), Status.BORROWED)
+                .orElseThrow(() -> new ResourceNotFoundException("No borrowed book found for the given id and borrower email"));
+
+        bookTransaction.setStatus(Status.RETURNED);
+        bookTransaction.setReturnedDate(LocalDateTime.now());
+
+        Book book = bookTransaction.getBook();
+        book.setAvailableQuantity(book.getAvailableQuantity() + 1);
+
+        bookTransactionRepository.save(bookTransaction);
+        bookRepository.save(book);
+    }
 }
