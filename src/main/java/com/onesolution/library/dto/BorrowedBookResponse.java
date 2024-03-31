@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class BookResponse {
+public class BorrowedBookResponse {
     private String title;
     private String description;
-    private AuthorResponse author;
-    private int quantity;
-    private int availableQuantity;
     private String genre;
 }

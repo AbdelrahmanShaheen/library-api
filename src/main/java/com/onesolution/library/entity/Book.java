@@ -22,13 +22,13 @@ public class Book {
     private String title;
     @Column(name = "description" ,nullable = false)
     private String description;
-    @ManyToOne(fetch = FetchType.EAGER,
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne
     @JoinColumn(name = "author_id" ,nullable = false)
     private Author author;
     @Column(name = "quantity" ,nullable = false)
     private int quantity;
+    @Column(name = "available_quantity" ,nullable = false)
+    private int availableQuantity;
     @Column(name = "genre" ,nullable = false)
     private String genre;
     @Column(name = "published_date" ,nullable = false)
