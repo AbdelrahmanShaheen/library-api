@@ -3,6 +3,8 @@ package com.onesolution.library.controller;
 import com.onesolution.library.dto.BookRequest;
 import com.onesolution.library.dto.BookResponse;
 import com.onesolution.library.dto.BookTransactionRequest;
+import com.onesolution.library.dto.BorrowedBookResponse;
+import com.onesolution.library.entity.BookTransaction;
 import com.onesolution.library.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +56,9 @@ public class BookController {
     @PostMapping("/{id}/return")
     public void returnBook(@PathVariable Long id, @RequestBody BookTransactionRequest bookTransactionRequest) {
         bookService.returnBook(id, bookTransactionRequest);
+    }
+    @GetMapping("/borrowed")
+    public Page<BorrowedBookResponse> getAllBorrowedBooks(Pageable page) {
+        return bookService.getAllBorrowedBooks(page);
     }
 }

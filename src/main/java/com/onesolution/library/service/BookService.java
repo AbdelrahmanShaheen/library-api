@@ -3,6 +3,7 @@ package com.onesolution.library.service;
 import com.onesolution.library.dto.BookRequest;
 import com.onesolution.library.dto.BookResponse;
 import com.onesolution.library.dto.BookTransactionRequest;
+import com.onesolution.library.dto.BorrowedBookResponse;
 import com.onesolution.library.entity.Author;
 import com.onesolution.library.entity.Book;
 import com.onesolution.library.entity.BookTransaction;
@@ -155,5 +156,19 @@ public class BookService {
 
         bookTransactionRepository.save(bookTransaction);
         bookRepository.save(book);
+    }
+
+    public Page<BorrowedBookResponse> getAllBorrowedBooks(Pageable page) {
+
+        Page<BookTransaction> borrowedBooksPage = bookTransactionRepository.findByStatus(Status.BORROWED, page);
+
+        return borrowedBooksPage.map(bookTransaction -> {
+            Book book = bookTransaction.getBook();
+            return BorrowedBookResponse.builder()
+                    .title(book.getTitle())
+                    .description(book.getDescription())
+                    .genre(book.getGenre())
+                    .build();
+        });
     }
 }
