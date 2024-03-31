@@ -114,15 +114,19 @@ public class BookService {
         return getAllBooks(page);
     }
 
-    public void borrowBook(Long id, BookTransactionRequest bookTransactionRequest) {
+    public void borrowBook(Long bookId, BookTransactionRequest bookTransactionRequest) {
 
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book with id [%s] does not exist".formatted(id)));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id [%s] does not exist".formatted(bookId)));
 
         if (book.getAvailableQuantity() == 0) {
-            throw new ResourceNotFoundException("Book with id [%s] is not available".formatted(id));
+            throw new ResourceNotFoundException("Book with id [%s] is not available".formatted(bookId));
         }
 
+        boolean hasBorrowedBook = bookTransactionRepository.existsByBookIdAndBorrowerEmailAndStatus(bookId, bookTransactionRequest.getBorrowerEmail(), Status.BORROWED);
+        if (hasBorrowedBook) {
+            throw new ConflictException("The same person is trying to borrow a book he borrowed and not returned it yet");
+        }
         // create a new BookTransaction
         BookTransaction bookTransaction = new BookTransaction();
         bookTransaction.setBook(book);
