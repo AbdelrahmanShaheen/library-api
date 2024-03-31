@@ -42,7 +42,7 @@ public class AuthorController {
     public void deleteAuthor(@PathVariable Long id) {
         authorService.deleteAuthor(id);
     }
-    //getting all books related to an author
+
     @GetMapping("/{id}/books")
     public Page<BookResponse> getBooksByAuthor(@PathVariable Long id, Pageable page) {
         return authorService.getBooksByAuthor(id, page);

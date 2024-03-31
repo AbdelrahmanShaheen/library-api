@@ -21,6 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -170,5 +173,24 @@ public class BookService {
                     .genre(book.getGenre())
                     .build();
         });
+    }
+
+    public Map<String, Object> getStatistics() {
+        Map<String, Object> statistics = new HashMap<>();
+        long totalBorrowedBooks = bookTransactionRepository.count();
+        List<Object[]> mostBorrowedBooks = bookTransactionRepository.findMostBorrowedBooks();
+        List<BookTransaction>overdueBooks = bookTransactionRepository.findOverdueBooks();
+
+        Map<String, Long> mostBorrowedBooksMap = new HashMap<>();
+        for (Object[] objects : mostBorrowedBooks) {
+            Book book = (Book) objects[0];
+            Long count = (Long) objects[1];
+            mostBorrowedBooksMap.put(book.getTitle(), count);
+        }
+        statistics.put("totalBorrowedBooks", totalBorrowedBooks);
+        statistics.put("mostBorrowedBooks", mostBorrowedBooksMap);
+        statistics.put("overdueBooks", overdueBooks.size());
+
+        return statistics;
     }
 }
