@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Mapper(componentModel = "spring" ,imports = LocalDateTime.class)
 
 public interface BookMapper {
+    @Mapping(target = "availableQuantity", source = "quantity")
     @Mapping(target = "publishedDate", expression = "java(LocalDateTime.now())")
     Book toEntity(BookRequest bookRequest);
     BookResponse toDto(Book book);

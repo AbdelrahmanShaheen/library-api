@@ -2,6 +2,7 @@ package com.onesolution.library.controller;
 
 import com.onesolution.library.dto.BookRequest;
 import com.onesolution.library.dto.BookResponse;
+import com.onesolution.library.dto.BookTransactionRequest;
 import com.onesolution.library.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,10 @@ public class BookController {
                                             Pageable page)
     {
         return bookService.searchBooksBy(title,genre, page);
+    }
+    @PostMapping("/{id}/borrow")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void borrowBook(@PathVariable Long id, @RequestBody BookTransactionRequest bookTransactionRequest) {
+        bookService.borrowBook(id, bookTransactionRequest);
     }
 }

@@ -2,24 +2,31 @@ package com.onesolution.library.service;
 
 import com.onesolution.library.dto.BookRequest;
 import com.onesolution.library.dto.BookResponse;
+import com.onesolution.library.dto.BookTransactionRequest;
 import com.onesolution.library.entity.Author;
 import com.onesolution.library.entity.Book;
+import com.onesolution.library.entity.BookTransaction;
+import com.onesolution.library.entity.Status;
 import com.onesolution.library.exception.ConflictException;
 import com.onesolution.library.exception.RequestValidationException;
 import com.onesolution.library.exception.ResourceNotFoundException;
 import com.onesolution.library.mapper.BookMapper;
 import com.onesolution.library.repository.AuthorRepository;
 import com.onesolution.library.repository.BookRepository;
+import com.onesolution.library.repository.BookTransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final BookTransactionRepository bookTransactionRepository;
     private final BookMapper bookMapper;
 
     public void addBook(BookRequest bookRequest) {
@@ -105,5 +112,29 @@ public class BookService {
             return bookRepository.findByGenre(genre, page).map(bookMapper::toDto);
         }
         return getAllBooks(page);
+    }
+
+    public void borrowBook(Long id, BookTransactionRequest bookTransactionRequest) {
+
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id [%s] does not exist".formatted(id)));
+
+        if (book.getAvailableQuantity() == 0) {
+            throw new ResourceNotFoundException("Book with id [%s] is not available".formatted(id));
+        }
+
+        // create a new BookTransaction
+        BookTransaction bookTransaction = new BookTransaction();
+        bookTransaction.setBook(book);
+        bookTransaction.setBorrowerEmail(bookTransactionRequest.getBorrowerEmail());
+        bookTransaction.setBorrowedDate(LocalDateTime.now());
+        bookTransaction.setDueDate(LocalDateTime.now().plusWeeks(2));
+        bookTransaction.setStatus(Status.BORROWED);
+
+        bookTransactionRepository.save(bookTransaction);
+
+        book.setAvailableQuantity(book.getAvailableQuantity() - 1);
+
+        bookRepository.save(book);
     }
 }
