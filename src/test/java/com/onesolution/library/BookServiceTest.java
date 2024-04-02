@@ -13,6 +13,7 @@ import com.onesolution.library.repository.AuthorRepository;
 import com.onesolution.library.repository.BookRepository;
 import com.onesolution.library.service.BookService;
 
+import com.onesolution.library.service.impl.BookServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.data.domain.Page;
@@ -38,7 +39,7 @@ public class BookServiceTest {
         bookRepository = mock(BookRepository.class);
         authorRepository = mock(AuthorRepository.class);
         bookMapper = new BookMapperImpl();
-        underTest = new BookService(bookRepository, authorRepository, bookMapper);
+        underTest = new BookServiceImpl(bookRepository, authorRepository, bookMapper);
     }
     @Test
     public void addBookShouldSuccess() {

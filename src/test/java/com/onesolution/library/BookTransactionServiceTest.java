@@ -11,6 +11,7 @@ import com.onesolution.library.exception.ResourceNotFoundException;
 import com.onesolution.library.repository.BookRepository;
 import com.onesolution.library.repository.BookTransactionRepository;
 import com.onesolution.library.service.BookTransactionService;
+import com.onesolution.library.service.impl.BookTransactionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,7 +35,7 @@ public class BookTransactionServiceTest {
     public BookTransactionServiceTest(){
         bookTransactionRepository = mock(BookTransactionRepository.class);
         bookRepository = mock(BookRepository.class);
-        underTest = new BookTransactionService(bookTransactionRepository, bookRepository);
+        underTest = new BookTransactionServiceImpl(bookTransactionRepository, bookRepository);
     }
     @Test
     void borrowBookShouldSuccess() {

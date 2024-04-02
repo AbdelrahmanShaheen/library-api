@@ -14,6 +14,7 @@ import com.onesolution.library.mapper.Impl.BookMapperImpl;
 import com.onesolution.library.repository.AuthorRepository;
 import com.onesolution.library.repository.BookRepository;
 import com.onesolution.library.service.AuthorService;
+import com.onesolution.library.service.impl.AuthorServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -42,7 +43,7 @@ public class AuthorServiceTest {
         bookRepository = mock(BookRepository.class);
         authorMapper = new AuthorMapperImpl();
         bookMapper = new BookMapperImpl();
-        underTest = new AuthorService(authorRepository, bookRepository, authorMapper, bookMapper);
+        underTest = new AuthorServiceImpl(authorRepository, bookRepository, authorMapper, bookMapper);
     }
     @Test
     public void createAuthorShouldSuccess(){
