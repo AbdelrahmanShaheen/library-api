@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -25,6 +24,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.MOCK ,classes = LibraryApplication.class)
@@ -60,7 +60,7 @@ public class AuthorIntegrationTest {
         JsonNode rootNode = objectMapper.readTree(contentAsString);
         ArrayNode contentNode = (ArrayNode) rootNode.get("content");
         List<AuthorResponse> authorResponses = objectMapper.convertValue(contentNode, new TypeReference<List<AuthorResponse>>() {});
-         assertEquals(2, authorResponses.size());
+         assertThat(authorResponses.size()).isEqualTo(2);
     }
     @Test
     @Sql(statements = "INSERT INTO author (id, name, biography) VALUES (1, 'Author 1', 'Biography 1')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -73,8 +73,8 @@ public class AuthorIntegrationTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         AuthorResponse authorResponse = objectMapper.readValue(contentAsString, AuthorResponse.class);
 
-         assertEquals("Author 1", authorResponse.getName());
-         assertEquals("Biography 1", authorResponse.getBiography());
+        assertThat(authorResponse.getName()).isEqualTo("Author 1");
+        assertThat(authorResponse.getBiography()).isEqualTo("Biography 1");
     }
     @Test
     @Sql(statements = "INSERT INTO author (id, name, biography) VALUES (1, 'Author 1', 'Biography 1')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -90,7 +90,7 @@ public class AuthorIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertEquals(200, mvcResult.getResponse().getStatus());
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(200);
     }
     @Test
     @Sql(statements = "INSERT INTO author (id, name, biography) VALUES (1, 'Author 1', 'Biography 1')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -100,7 +100,7 @@ public class AuthorIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent())
                 .andReturn();
 
-        assertEquals(204, mvcResult.getResponse().getStatus());
+        assertThat(mvcResult.getResponse().getStatus()).isEqualTo(204);
     }
     @Test
     @Sql(statements = {
@@ -121,10 +121,8 @@ public class AuthorIntegrationTest {
         ArrayNode contentNode = (ArrayNode) rootNode.get("content");
         List<BookResponse> bookResponses = objectMapper.convertValue(contentNode, new TypeReference<List<BookResponse>>() {});
 
-
-        assertEquals(2, bookResponses.size());
-        assertEquals("Book 1", bookResponses.get(0).getTitle());
-        assertEquals("Book 2", bookResponses.get(1).getTitle());
-
+        assertThat(bookResponses.size()).isEqualTo(2);
+        assertThat(bookResponses.get(0).getTitle()).isEqualTo("Book 1");
+        assertThat(bookResponses.get(1).getTitle()).isEqualTo("Book 2");
     }
 }
