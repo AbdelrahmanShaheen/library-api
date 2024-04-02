@@ -54,25 +54,4 @@ public class BookController {
     {
         return bookService.searchBooksBy(title,genre, page);
     }
-
-    @PostMapping("/{id}/borrow")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void borrowBook(@PathVariable Long id, @RequestBody BookTransactionRequest bookTransactionRequest) {
-        bookService.borrowBook(id, bookTransactionRequest);
-    }
-
-    @PostMapping("/{id}/return")
-    public void returnBook(@PathVariable Long id, @RequestBody BookTransactionRequest bookTransactionRequest) {
-        bookService.returnBook(id, bookTransactionRequest);
-    }
-
-    @GetMapping("/borrowed")
-    public Page<BorrowedBookResponse> getAllBorrowedBooks(Pageable page) {
-        return bookService.getAllBorrowedBooks(page);
-    }
-
-    @GetMapping("/statistics")
-    public Map<String, Object> getBookBorrowingStatistics() {
-        return bookService.getStatistics();
-    }
 }
