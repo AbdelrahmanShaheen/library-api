@@ -30,7 +30,7 @@ public class BookIntegrationTest {
     private ObjectMapper objectMapper;
     private final String baseUrl = "/api/books";
     @Test
-    @Sql(statements = "INSERT INTO author (name, biography) VALUES ('Author 1', 'Biography 1')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO author (id, name, biography) VALUES (1, 'Author 1', 'Biography 1')", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = {
             "DELETE FROM book",
             "DELETE FROM author"
