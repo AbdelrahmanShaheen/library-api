@@ -1,4 +1,4 @@
-package integration;
+package com.onesolution.library.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onesolution.library.LibraryApplication;

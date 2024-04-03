@@ -1,4 +1,4 @@
-package integration;
+package com.onesolution.library.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
