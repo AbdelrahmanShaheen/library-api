@@ -62,20 +62,19 @@
  ┃ ┃ ┗ 📜application.properties
  ┗ 📂test
  ┃ ┣ 📂java
- ┃ ┃ ┣ 📂com
+ ┃ ┃ ┗ 📂com
  ┃ ┃ ┃ ┗ 📂onesolution
  ┃ ┃ ┃ ┃ ┗ 📂library
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂integration
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthorIntegrationTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜BookIntegrationTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜BookTransactionIntegrationTest.java
  ┃ ┃ ┃ ┃ ┃ ┗ 📂unit
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AuthorServiceTest.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜BookServiceTest.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜BookTransactionServiceTest.java
- ┃ ┃ ┗ 📂integration
- ┃ ┃ ┃ ┣ 📜AuthorIntegrationTest.java
- ┃ ┃ ┃ ┣ 📜BookIntegrationTest.java
- ┃ ┃ ┃ ┗ 📜BookTransactionIntegrationTest.java
  ┃ ┗ 📂resources
  ┃ ┃ ┗ 📜application.properties
-
 ```
 
 </details>
